@@ -33,8 +33,9 @@ Berikut adalah daftar variabel lingkungan yang diperlukan dalam file `.env`:
 3. **DB_HOST**: Host database.
 4. **DB_PORT**: Port database.
 5. **DB_NAME**: Nama database yang digunakan.
-5. **JWT_SECRET**: Kunci JWT Bearer.
-5. **OPEN_AI_TOKEN**: Token OpenAI.
+6. **JWT_SECRET**: Kunci JWT Bearer.
+7. **OPEN_AI_TOKEN**: Token OpenAI.
+8. **FIREBASE_URL**: Link base url firebase.
 
 ### How To Use `.env.example`
 
