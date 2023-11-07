@@ -127,7 +127,7 @@ func (c *AdminControllerImpl) GetAdminsController(ctx echo.Context) error {
 }
 
 func (c *AdminControllerImpl) GetAdminByNameController(ctx echo.Context) error {
-	adminName := ctx.Param("name")
+	adminName := ctx.QueryParam("name")
 
 	result, err := c.AdminService.FindByName(ctx, adminName)
 	if err != nil {
