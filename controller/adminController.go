@@ -169,7 +169,7 @@ func (c *AdminControllerImpl) UpdateAdminController(ctx echo.Context) error {
 		return ctx.JSON(http.StatusInternalServerError, helper.ErrorResponse("Update Admin Error"))
 	}
 
-	response := res.UpdateAdminDomaintoAdminResponse(uint(adminIdInt) ,result)
+	response := res.UpdateAdminDomaintoAdminResponse(uint(adminIdInt), result)
 
 	return ctx.JSON(http.StatusOK, helper.SuccessResponse("Successfully Updated Admin Data", response))
 }
@@ -190,5 +190,5 @@ func (c *AdminControllerImpl) DeleteAdminController(ctx echo.Context) error {
 		return ctx.JSON(http.StatusInternalServerError, helper.ErrorResponse("Delete Admin Data Error"))
 	}
 
-	return ctx.JSON(http.StatusNoContent, helper.SuccessResponse("Successfully Deleted Admin Data", nil))
+	return ctx.JSON(http.StatusNoContent, nil)
 }

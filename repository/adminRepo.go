@@ -2,6 +2,7 @@ package repository
 
 import (
 	"peekabook/model/domain"
+	"peekabook/model/schema"
 	"peekabook/utils/req"
 	"peekabook/utils/res"
 
@@ -97,7 +98,7 @@ func (repository *AdminRepositoryImpl) FindByName(name string) (*domain.Admin, e
 }
 
 func (repository *AdminRepositoryImpl) Delete(id int) error {
-	result := repository.DB.Table("admins").Where("id = ?", id).Unscoped().Delete(id)
+	result := repository.DB.Table("admins").Where("id = ?", id).Delete(&schema.Admin{})
 	if result.Error != nil {
 		return result.Error
 	}
