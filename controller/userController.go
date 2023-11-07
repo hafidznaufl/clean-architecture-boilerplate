@@ -127,7 +127,7 @@ func (c *UserControllerImpl) GetUsersController(ctx echo.Context) error {
 }
 
 func (c *UserControllerImpl) GetUserByNameController(ctx echo.Context) error {
-	userName := ctx.Param("name")
+	userName := ctx.QueryParam("name")
 
 	result, err := c.UserService.FindByName(ctx, userName)
 	if err != nil {
