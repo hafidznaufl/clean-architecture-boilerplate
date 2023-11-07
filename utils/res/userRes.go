@@ -30,15 +30,6 @@ func UserDomaintoUserResponse(user *domain.User) web.UserResponse {
 	}
 }
 
-func UpdateUserDomaintoUserResponse(id uint ,user *domain.User) web.UserResponse {
-	return web.UserResponse{
-		Id:    id,
-		Name:  user.Name,
-		Email: user.Email,
-	}
-}
-
-
 func ConvertUserResponse(users []domain.User) []web.UserResponse {
 	var results []web.UserResponse
 	for _, user := range users {

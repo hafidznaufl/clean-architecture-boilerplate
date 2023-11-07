@@ -123,7 +123,11 @@ func (context *UserServiceImpl) UpdateUser(ctx echo.Context, request web.UserUpd
 	user := req.UserUpdateRequestToUserDomain(request)
 	user.Password = helper.HashPassword(user.Password)
 
-	result, err := context.UserRepository.Update(user, id)
+	_, err = context.UserRepository.Update(user, id)
+	if err != nil {
+		return nil, fmt.Errorf("error when updating user: %s", err.Error())
+	}
+	result, err := context.UserRepository.FindById(id)
 	if err != nil {
 		return nil, fmt.Errorf("error when updating user: %s", err.Error())
 	}

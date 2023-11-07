@@ -117,7 +117,7 @@ func (c *UserControllerImpl) UpdateUserController(ctx echo.Context) error {
 		return ctx.JSON(http.StatusInternalServerError, helper.ErrorResponse("Update User Error"))
 	}
 
-	response := res.UpdateUserDomaintoUserResponse(uint(userIdInt), result)
+	response := res.UserDomaintoUserResponse(result)
 
 	return ctx.JSON(http.StatusOK, helper.SuccessResponse("Successfully Updated User Data", response))
 }
