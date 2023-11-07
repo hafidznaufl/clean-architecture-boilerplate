@@ -11,12 +11,12 @@ import (
 
 type UserRepository interface {
 	Create(user *domain.User) (*domain.User, error)
-	Update(user *domain.User, id int) (*domain.User, error)
-	ResetPassword(user *domain.User, email string) (*domain.User, error)
 	FindById(id int) (*domain.User, error)
 	FindByEmail(email string) (*domain.User, error)
 	FindAll() ([]domain.User, error)
 	FindByName(name string) (*domain.User, error)
+	Update(user *domain.User, id int) (*domain.User, error)
+	ResetPassword(user *domain.User, email string) (*domain.User, error)
 	Delete(id int) error
 }
 
@@ -31,32 +31,6 @@ func NewUserRepository(DB *gorm.DB) UserRepository {
 func (repository *UserRepositoryImpl) Create(user *domain.User) (*domain.User, error) {
 	userDb := req.UserDomaintoUserSchema(*user)
 	result := repository.DB.Create(&userDb)
-	if result.Error != nil {
-		return nil, result.Error
-	}
-
-	user = res.UserSchemaToUserDomain(userDb)
-
-	return user, nil
-}
-
-func (repository *UserRepositoryImpl) Update(user *domain.User, id int) (*domain.User, error) {
-	userDb := req.UserDomaintoUserSchema(*user)
-
-	result := repository.DB.Table("users").Where("id = ?", id).Updates(userDb)
-	if result.Error != nil {
-		return nil, result.Error
-	}
-
-	user = res.UserSchemaToUserDomain(userDb)
-
-	return user, nil
-}
-
-func (repository *UserRepositoryImpl) ResetPassword(user *domain.User, email string) (*domain.User, error) {
-	userDb := req.UserDomaintoUserSchema(*user)
-
-	result := repository.DB.Table("users").Where("email = ?", email).Updates(userDb)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -110,6 +84,32 @@ func (repository *UserRepositoryImpl) FindByName(name string) (*domain.User, err
 	}
 
 	return &user, nil
+}
+
+func (repository *UserRepositoryImpl) Update(user *domain.User, id int) (*domain.User, error) {
+	userDb := req.UserDomaintoUserSchema(*user)
+
+	result := repository.DB.Table("users").Where("id = ?", id).Updates(userDb)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	user = res.UserSchemaToUserDomain(userDb)
+
+	return user, nil
+}
+
+func (repository *UserRepositoryImpl) ResetPassword(user *domain.User, email string) (*domain.User, error) {
+	userDb := req.UserDomaintoUserSchema(*user)
+
+	result := repository.DB.Table("users").Where("email = ?", email).Updates(userDb)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	user = res.UserSchemaToUserDomain(userDb)
+
+	return user, nil
 }
 
 func (repository *UserRepositoryImpl) Delete(id int) error {

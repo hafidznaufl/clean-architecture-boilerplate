@@ -80,6 +80,34 @@ func (context *AdminServiceImpl) LoginAdmin(ctx echo.Context, request web.AdminL
 	return existingAdmin, nil
 }
 
+func (context *AdminServiceImpl) FindById(ctx echo.Context, id int) (*domain.Admin, error) {
+
+	existingAdmin, _ := context.AdminRepository.FindById(id)
+	if existingAdmin == nil {
+		return nil, fmt.Errorf("admin not found")
+	}
+
+	return existingAdmin, nil
+}
+
+func (context *AdminServiceImpl) FindByName(ctx echo.Context, name string) (*domain.Admin, error) {
+	admin, _ := context.AdminRepository.FindByName(name)
+	if admin == nil {
+		return nil, fmt.Errorf("admin not found")
+	}
+
+	return admin, nil
+}
+
+func (context *AdminServiceImpl) FindAll(ctx echo.Context) ([]domain.Admin, error) {
+	admin, err := context.AdminRepository.FindAll()
+	if err != nil {
+		return nil, fmt.Errorf("admins not found")
+	}
+
+	return admin, nil
+}
+
 func (context *AdminServiceImpl) UpdateAdmin(ctx echo.Context, request web.AdminUpdateRequest, id int) (*domain.Admin, error) {
 
 	err := context.Validate.Struct(request)
@@ -131,38 +159,8 @@ func (context *AdminServiceImpl) ResetPassword(ctx echo.Context, request web.Adm
 		return nil, fmt.Errorf("error when updating user: %s", err.Error())
 	}
 
-	fmt.Println(result)
-
 	return result, nil
 
-}
-
-func (context *AdminServiceImpl) FindById(ctx echo.Context, id int) (*domain.Admin, error) {
-
-	existingAdmin, _ := context.AdminRepository.FindById(id)
-	if existingAdmin == nil {
-		return nil, fmt.Errorf("admin not found")
-	}
-
-	return existingAdmin, nil
-}
-
-func (context *AdminServiceImpl) FindByName(ctx echo.Context, name string) (*domain.Admin, error) {
-	admin, _ := context.AdminRepository.FindByName(name)
-	if admin == nil {
-		return nil, fmt.Errorf("admin not found")
-	}
-
-	return admin, nil
-}
-
-func (context *AdminServiceImpl) FindAll(ctx echo.Context) ([]domain.Admin, error) {
-	admin, err := context.AdminRepository.FindAll()
-	if err != nil {
-		return nil, fmt.Errorf("admins not found")
-	}
-
-	return admin, nil
 }
 
 func (context *AdminServiceImpl) DeleteAdmin(ctx echo.Context, id int) error {

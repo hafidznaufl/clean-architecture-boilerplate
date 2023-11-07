@@ -11,12 +11,12 @@ import (
 
 type AdminRepository interface {
 	Create(admin *domain.Admin) (*domain.Admin, error)
-	Update(admin *domain.Admin, id int) (*domain.Admin, error)
-	ResetPassword(admin *domain.Admin, email string) (*domain.Admin, error)
 	FindById(id int) (*domain.Admin, error)
 	FindByEmail(email string) (*domain.Admin, error)
 	FindAll() ([]domain.Admin, error)
 	FindByName(name string) (*domain.Admin, error)
+	Update(admin *domain.Admin, id int) (*domain.Admin, error)
+	ResetPassword(admin *domain.Admin, email string) (*domain.Admin, error)
 	Delete(id int) error
 }
 
@@ -31,32 +31,6 @@ func NewAdminRepository(DB *gorm.DB) AdminRepository {
 func (repository *AdminRepositoryImpl) Create(admin *domain.Admin) (*domain.Admin, error) {
 	adminDb := req.AdminDomaintoAdminSchema(*admin)
 	result := repository.DB.Create(&adminDb)
-	if result.Error != nil {
-		return nil, result.Error
-	}
-
-	admin = res.AdminSchemaToAdminDomain(adminDb)
-
-	return admin, nil
-}
-
-func (repository *AdminRepositoryImpl) Update(admin *domain.Admin, id int) (*domain.Admin, error) {
-	adminDb := req.AdminDomaintoAdminSchema(*admin)
-
-	result := repository.DB.Table("admins").Where("id = ?", id).Updates(adminDb)
-	if result.Error != nil {
-		return nil, result.Error
-	}
-
-	admin = res.AdminSchemaToAdminDomain(adminDb)
-
-	return admin, nil
-}
-
-func (repository *AdminRepositoryImpl) ResetPassword(admin *domain.Admin, email string) (*domain.Admin, error) {
-	adminDb := req.AdminDomaintoAdminSchema(*admin)
-
-	result := repository.DB.Table("admins").Where("email = ?", email).Updates(adminDb)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -109,6 +83,32 @@ func (repository *AdminRepositoryImpl) FindByName(name string) (*domain.Admin, e
 	}
 
 	return &author, nil
+}
+
+func (repository *AdminRepositoryImpl) Update(admin *domain.Admin, id int) (*domain.Admin, error) {
+	adminDb := req.AdminDomaintoAdminSchema(*admin)
+
+	result := repository.DB.Table("admins").Where("id = ?", id).Updates(adminDb)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	admin = res.AdminSchemaToAdminDomain(adminDb)
+
+	return admin, nil
+}
+
+func (repository *AdminRepositoryImpl) ResetPassword(admin *domain.Admin, email string) (*domain.Admin, error) {
+	adminDb := req.AdminDomaintoAdminSchema(*admin)
+
+	result := repository.DB.Table("admins").Where("email = ?", email).Updates(adminDb)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	admin = res.AdminSchemaToAdminDomain(adminDb)
+
+	return admin, nil
 }
 
 func (repository *AdminRepositoryImpl) Delete(id int) error {

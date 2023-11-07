@@ -80,6 +80,34 @@ func (context *UserServiceImpl) LoginUser(ctx echo.Context, request web.UserLogi
 	return existingUser, nil
 }
 
+func (context *UserServiceImpl) FindById(ctx echo.Context, id int) (*domain.User, error) {
+
+	existingUser, _ := context.UserRepository.FindById(id)
+	if existingUser == nil {
+		return nil, fmt.Errorf("user not found")
+	}
+
+	return existingUser, nil
+}
+
+func (context *UserServiceImpl) FindAll(ctx echo.Context) ([]domain.User, error) {
+	users, err := context.UserRepository.FindAll()
+	if err != nil {
+		return nil, fmt.Errorf("users not found")
+	}
+
+	return users, nil
+}
+
+func (context *UserServiceImpl) FindByName(ctx echo.Context, name string) (*domain.User, error) {
+	user, _ := context.UserRepository.FindByName(name)
+	if user == nil {
+		return nil, fmt.Errorf("user not found")
+	}
+
+	return user, nil
+}
+
 func (context *UserServiceImpl) UpdateUser(ctx echo.Context, request web.UserUpdateRequest, id int) (*domain.User, error) {
 
 	err := context.Validate.Struct(request)
@@ -131,38 +159,8 @@ func (context *UserServiceImpl) ResetPassword(ctx echo.Context, request web.User
 		return nil, fmt.Errorf("error when updating user: %s", err.Error())
 	}
 
-	fmt.Println(result)
-
 	return result, nil
 
-}
-
-func (context *UserServiceImpl) FindById(ctx echo.Context, id int) (*domain.User, error) {
-
-	existingUser, _ := context.UserRepository.FindById(id)
-	if existingUser == nil {
-		return nil, fmt.Errorf("user not found")
-	}
-
-	return existingUser, nil
-}
-
-func (context *UserServiceImpl) FindAll(ctx echo.Context) ([]domain.User, error) {
-	users, err := context.UserRepository.FindAll()
-	if err != nil {
-		return nil, fmt.Errorf("users not found")
-	}
-
-	return users, nil
-}
-
-func (context *UserServiceImpl) FindByName(ctx echo.Context, name string) (*domain.User, error) {
-	user, _ := context.UserRepository.FindByName(name)
-	if user == nil {
-		return nil, fmt.Errorf("user not found")
-	}
-
-	return user, nil
 }
 
 func (context *UserServiceImpl) DeleteUser(ctx echo.Context, id int) error {
