@@ -123,9 +123,14 @@ func (context *AdminServiceImpl) UpdateAdmin(ctx echo.Context, request web.Admin
 	admin := req.AdminUpdateRequestToAdminDomain(request)
 	admin.Password = helper.HashPassword(admin.Password)
 
-	result, err := context.AdminRepository.Update(admin, id)
+	_, err = context.AdminRepository.Update(admin, id)
 	if err != nil {
 		return nil, fmt.Errorf("error when updating admin: %s", err.Error())
+	}
+
+	result, err := context.AdminRepository.FindById(id)
+	if err != nil {
+		return nil, fmt.Errorf("error when updating user: %s", err.Error())
 	}
 
 	return result, nil

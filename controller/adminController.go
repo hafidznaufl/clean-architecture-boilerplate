@@ -170,7 +170,7 @@ func (c *AdminControllerImpl) UpdateAdminController(ctx echo.Context) error {
 		return ctx.JSON(http.StatusInternalServerError, helper.ErrorResponse("Update Admin Error"))
 	}
 
-	response := res.UpdateAdminDomaintoAdminResponse(uint(adminIdInt), result)
+	response := res.AdminDomaintoAdminResponse(result)
 
 	return ctx.JSON(http.StatusOK, helper.SuccessResponse("Successfully Updated Admin Data", response))
 }
