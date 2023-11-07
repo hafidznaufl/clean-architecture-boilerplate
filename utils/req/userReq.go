@@ -23,10 +23,15 @@ func UserLoginRequestToUserDomain(request web.UserLoginRequest) *domain.User {
 
 func UserUpdateRequestToUserDomain(request web.UserUpdateRequest) *domain.User {
 	return &domain.User{
-
 		Name:     request.Name,
 		Email:    request.Email,
 		Password: request.Password,
+	}
+}
+
+func UserResetPasswordRequestToUserDomain(request web.UserResetPasswordRequest) *domain.User {
+	return &domain.User{
+		Password: request.NewPassword,
 	}
 }
 

@@ -17,6 +17,7 @@ type UserController interface {
 	RegisterUserController(ctx echo.Context) error
 	LoginUserController(ctx echo.Context) error
 	UpdateUserController(ctx echo.Context) error
+	ResetPassword(ctx echo.Context) error
 	GetUserController(ctx echo.Context) error
 	GetUsersController(ctx echo.Context) error
 	GetUserByNameController(ctx echo.Context) error
@@ -90,6 +91,66 @@ func (c *UserControllerImpl) LoginUserController(ctx echo.Context) error {
 	return ctx.JSON(http.StatusOK, helper.SuccessResponse("Successfully Sign In", userLoginResponse))
 }
 
+func (c *UserControllerImpl) UpdateUserController(ctx echo.Context) error {
+	userId := ctx.Param("id")
+	userIdInt, err := strconv.Atoi(userId)
+	if err != nil {
+		return ctx.JSON(http.StatusInternalServerError, helper.ErrorResponse("Invalid Param Id"))
+	}
+
+	userUpdateRequest := web.UserUpdateRequest{}
+	err = ctx.Bind(&userUpdateRequest)
+	if err != nil {
+		return ctx.JSON(http.StatusBadRequest, helper.ErrorResponse("Invalid Client Input"))
+	}
+
+	result, err := c.UserService.UpdateUser(ctx, userUpdateRequest, userIdInt)
+	if err != nil {
+		if strings.Contains(err.Error(), "validation failed") {
+			return ctx.JSON(http.StatusBadRequest, helper.ErrorResponse("Invalid Validation"))
+		}
+
+		if strings.Contains(err.Error(), "user not found") {
+			return ctx.JSON(http.StatusNotFound, helper.ErrorResponse("User Not Found"))
+		}
+
+		return ctx.JSON(http.StatusInternalServerError, helper.ErrorResponse("Update User Error"))
+	}
+
+	response := res.UpdateUserDomaintoUserResponse(uint(userIdInt), result)
+
+	return ctx.JSON(http.StatusOK, helper.SuccessResponse("Successfully Updated User Data", response))
+}
+
+func (c *UserControllerImpl) ResetPassword(ctx echo.Context) error {
+	resetPasswordRequest := web.UserResetPasswordRequest{}
+	err := ctx.Bind(&resetPasswordRequest)
+	if err != nil {
+		return ctx.JSON(http.StatusBadRequest, helper.ErrorResponse("Invalid Client Input"))
+	}
+
+	result, err := c.UserService.ResetPassword(ctx, resetPasswordRequest)
+	if err != nil {
+		if strings.Contains(err.Error(), "validation failed") {
+			return ctx.JSON(http.StatusBadRequest, helper.ErrorResponse("Invalid Validation"))
+		}
+
+		if strings.Contains(err.Error(), "new password and confirm new password do not match") {
+			return ctx.JSON(http.StatusNotFound, helper.ErrorResponse("New Password & Confirm New Password Do Not Match"))
+		}
+
+		if strings.Contains(err.Error(), "user not found") {
+			return ctx.JSON(http.StatusNotFound, helper.ErrorResponse("User Not Found"))
+		}
+
+		return ctx.JSON(http.StatusInternalServerError, helper.ErrorResponse("Update User Error"))
+	}
+
+	response := res.UserDomaintoUserResponse(result)
+
+	return ctx.JSON(http.StatusCreated, helper.SuccessResponse("Successfully Reset Password", response))
+}
+
 func (c *UserControllerImpl) GetUserController(ctx echo.Context) error {
 	userId := ctx.Param("id")
 	userIdInt, err := strconv.Atoi(userId)
@@ -141,37 +202,6 @@ func (c *UserControllerImpl) GetUserByNameController(ctx echo.Context) error {
 	response := res.UserDomaintoUserResponse(result)
 
 	return ctx.JSON(http.StatusOK, helper.SuccessResponse("Successfully Get User Data By Name", response))
-}
-
-func (c *UserControllerImpl) UpdateUserController(ctx echo.Context) error {
-	userId := ctx.Param("id")
-	userIdInt, err := strconv.Atoi(userId)
-	if err != nil {
-		return ctx.JSON(http.StatusInternalServerError, helper.ErrorResponse("Invalid Param Id"))
-	}
-
-	userUpdateRequest := web.UserUpdateRequest{}
-	err = ctx.Bind(&userUpdateRequest)
-	if err != nil {
-		return ctx.JSON(http.StatusBadRequest, helper.ErrorResponse("Invalid Client Input"))
-	}
-
-	result, err := c.UserService.UpdateUser(ctx, userUpdateRequest, userIdInt)
-	if err != nil {
-		if strings.Contains(err.Error(), "validation failed") {
-			return ctx.JSON(http.StatusBadRequest, helper.ErrorResponse("Invalid Validation"))
-		}
-
-		if strings.Contains(err.Error(), "user not found") {
-			return ctx.JSON(http.StatusNotFound, helper.ErrorResponse("User Not Found"))
-		}
-
-		return ctx.JSON(http.StatusInternalServerError, helper.ErrorResponse("Update User Error"))
-	}
-
-	response := res.UpdateUserDomaintoUserResponse(uint(userIdInt), result)
-
-	return ctx.JSON(http.StatusOK, helper.SuccessResponse("Successfully Updated User Data", response))
 }
 
 func (c *UserControllerImpl) DeleteUserController(ctx echo.Context) error {

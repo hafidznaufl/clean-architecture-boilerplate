@@ -12,6 +12,7 @@ import (
 type UserRepository interface {
 	Create(user *domain.User) (*domain.User, error)
 	Update(user *domain.User, id int) (*domain.User, error)
+	ResetPassword(user *domain.User, email string) (*domain.User, error)
 	FindById(id int) (*domain.User, error)
 	FindByEmail(email string) (*domain.User, error)
 	FindAll() ([]domain.User, error)
@@ -43,6 +44,19 @@ func (repository *UserRepositoryImpl) Update(user *domain.User, id int) (*domain
 	userDb := req.UserDomaintoUserSchema(*user)
 
 	result := repository.DB.Table("users").Where("id = ?", id).Updates(userDb)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	user = res.UserSchemaToUserDomain(userDb)
+
+	return user, nil
+}
+
+func (repository *UserRepositoryImpl) ResetPassword(user *domain.User, email string) (*domain.User, error) {
+	userDb := req.UserDomaintoUserSchema(*user)
+
+	result := repository.DB.Table("users").Where("email = ?", email).Updates(userDb)
 	if result.Error != nil {
 		return nil, result.Error
 	}

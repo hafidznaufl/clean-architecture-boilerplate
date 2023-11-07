@@ -16,6 +16,7 @@ type UserService interface {
 	CreateUser(ctx echo.Context, request web.UserCreateRequest) (*domain.User, error)
 	LoginUser(ctx echo.Context, request web.UserLoginRequest) (*domain.User, error)
 	UpdateUser(ctx echo.Context, request web.UserUpdateRequest, id int) (*domain.User, error)
+	ResetPassword(ctx echo.Context, request web.UserResetPasswordRequest) (*domain.User, error)
 	FindById(ctx echo.Context, id int) (*domain.User, error)
 	FindAll(ctx echo.Context) ([]domain.User, error)
 	FindByName(ctx echo.Context, name string) (*domain.User, error)
@@ -100,6 +101,40 @@ func (context *UserServiceImpl) UpdateUser(ctx echo.Context, request web.UserUpd
 	}
 
 	return result, nil
+}
+
+func (context *UserServiceImpl) ResetPassword(ctx echo.Context, request web.UserResetPasswordRequest) (*domain.User, error) {
+	err := context.Validate.Struct(request)
+	if err != nil {
+		return nil, helper.ValidationError(ctx, err)
+	}
+
+	existingUser, _ := context.UserRepository.FindByEmail(request.Email)
+	if existingUser == nil {
+		return nil, fmt.Errorf("user not found")
+	}
+
+	if request.NewPassword != request.ConfirmNewPassword {
+		return nil, fmt.Errorf("new password and confirm new password do not match")
+	}
+
+	user := req.UserResetPasswordRequestToUserDomain(request)
+	user.Password = helper.HashPassword(user.Password)
+
+	_, err = context.UserRepository.ResetPassword(user, request.Email)
+	if err != nil {
+		return nil, fmt.Errorf("error when updating user: %s", err.Error())
+	}
+
+	result, err := context.UserRepository.FindByEmail(request.Email)
+	if err != nil {
+		return nil, fmt.Errorf("error when updating user: %s", err.Error())
+	}
+
+	fmt.Println(result)
+
+	return result, nil
+
 }
 
 func (context *UserServiceImpl) FindById(ctx echo.Context, id int) (*domain.User, error) {
