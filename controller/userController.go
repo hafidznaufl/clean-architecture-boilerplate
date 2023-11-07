@@ -169,7 +169,7 @@ func (c *UserControllerImpl) UpdateUserController(ctx echo.Context) error {
 		return ctx.JSON(http.StatusInternalServerError, helper.ErrorResponse("Update User Error"))
 	}
 
-	response := res.UpdateUserDomaintoUserResponse(uint(userIdInt) ,result)
+	response := res.UpdateUserDomaintoUserResponse(uint(userIdInt), result)
 
 	return ctx.JSON(http.StatusOK, helper.SuccessResponse("Successfully Updated User Data", response))
 }
@@ -190,5 +190,5 @@ func (c *UserControllerImpl) DeleteUserController(ctx echo.Context) error {
 		return ctx.JSON(http.StatusInternalServerError, helper.ErrorResponse("Delete User Data Error"))
 	}
 
-	return ctx.JSON(http.StatusNoContent, helper.SuccessResponse("Successfully Deleted User Data", nil))
+	return ctx.JSON(http.StatusNoContent, nil)
 }
