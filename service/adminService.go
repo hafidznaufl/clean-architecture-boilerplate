@@ -16,6 +16,7 @@ type AdminService interface {
 	CreateAdmin(ctx echo.Context, request web.AdminCreateRequest) (*domain.Admin, error)
 	LoginAdmin(ctx echo.Context, request web.AdminLoginRequest) (*domain.Admin, error)
 	UpdateAdmin(ctx echo.Context, request web.AdminUpdateRequest, id int) (*domain.Admin, error)
+	ResetPassword(ctx echo.Context, request web.AdminResetPasswordRequest) (*domain.Admin, error)
 	FindById(ctx echo.Context, id int) (*domain.Admin, error)
 	FindAll(ctx echo.Context) ([]domain.Admin, error)
 	FindByName(ctx echo.Context, name string) (*domain.Admin, error)
@@ -100,6 +101,40 @@ func (context *AdminServiceImpl) UpdateAdmin(ctx echo.Context, request web.Admin
 	}
 
 	return result, nil
+}
+
+func (context *AdminServiceImpl) ResetPassword(ctx echo.Context, request web.AdminResetPasswordRequest) (*domain.Admin, error) {
+	err := context.Validate.Struct(request)
+	if err != nil {
+		return nil, helper.ValidationError(ctx, err)
+	}
+
+	existingAdmin, _ := context.AdminRepository.FindByEmail(request.Email)
+	if existingAdmin == nil {
+		return nil, fmt.Errorf("user not found")
+	}
+
+	if request.NewPassword != request.ConfirmNewPassword {
+		return nil, fmt.Errorf("new password and confirm new password do not match")
+	}
+
+	user := req.AdminResetPasswordRequestToAdminDomain(request)
+	user.Password = helper.HashPassword(user.Password)
+
+	_, err = context.AdminRepository.ResetPassword(user, request.Email)
+	if err != nil {
+		return nil, fmt.Errorf("error when updating user: %s", err.Error())
+	}
+
+	result, err := context.AdminRepository.FindByEmail(request.Email)
+	if err != nil {
+		return nil, fmt.Errorf("error when updating user: %s", err.Error())
+	}
+
+	fmt.Println(result)
+
+	return result, nil
+
 }
 
 func (context *AdminServiceImpl) FindById(ctx echo.Context, id int) (*domain.Admin, error) {

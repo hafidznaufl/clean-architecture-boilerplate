@@ -17,6 +17,7 @@ type AdminController interface {
 	RegisterAdminController(ctx echo.Context) error
 	LoginAdminController(ctx echo.Context) error
 	UpdateAdminController(ctx echo.Context) error
+	ResetPassword(ctx echo.Context) error
 	GetAdminController(ctx echo.Context) error
 	GetAdminsController(ctx echo.Context) error
 	GetAdminByNameController(ctx echo.Context) error
@@ -172,6 +173,35 @@ func (c *AdminControllerImpl) UpdateAdminController(ctx echo.Context) error {
 	response := res.UpdateAdminDomaintoAdminResponse(uint(adminIdInt), result)
 
 	return ctx.JSON(http.StatusOK, helper.SuccessResponse("Successfully Updated Admin Data", response))
+}
+
+func (c *AdminControllerImpl) ResetPassword(ctx echo.Context) error {
+	resetPasswordRequest := web.AdminResetPasswordRequest{}
+	err := ctx.Bind(&resetPasswordRequest)
+	if err != nil {
+		return ctx.JSON(http.StatusBadRequest, helper.ErrorResponse("Invalid Client Input"))
+	}
+
+	result, err := c.AdminService.ResetPassword(ctx, resetPasswordRequest)
+	if err != nil {
+		if strings.Contains(err.Error(), "validation failed") {
+			return ctx.JSON(http.StatusBadRequest, helper.ErrorResponse("Invalid Validation"))
+		}
+
+		if strings.Contains(err.Error(), "new password and confirm new password do not match") {
+			return ctx.JSON(http.StatusNotFound, helper.ErrorResponse("New Password & Confirm New Password Do Not Match"))
+		}
+
+		if strings.Contains(err.Error(), "user not found") {
+			return ctx.JSON(http.StatusNotFound, helper.ErrorResponse("Admin Not Found"))
+		}
+
+		return ctx.JSON(http.StatusInternalServerError, helper.ErrorResponse("Update Admin Error"))
+	}
+
+	response := res.AdminDomaintoAdminResponse(result)
+
+	return ctx.JSON(http.StatusCreated, helper.SuccessResponse("Successfully Reset Password", response))
 }
 
 func (c *AdminControllerImpl) DeleteAdminController(ctx echo.Context) error {

@@ -29,6 +29,12 @@ func AdminUpdateRequestToAdminDomain(request web.AdminUpdateRequest) *domain.Adm
 	}
 }
 
+func AdminResetPasswordRequestToAdminDomain(request web.AdminResetPasswordRequest) *domain.Admin {
+	return &domain.Admin{
+		Password: request.NewPassword,
+	}
+}
+
 func AdminDomaintoAdminSchema(request domain.Admin) *schema.Admin {
 	return &schema.Admin{
 		Name:     request.Name,
