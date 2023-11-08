@@ -1,9 +1,9 @@
 package req
 
 import (
-	"peekabook/model/domain"
-	"peekabook/model/schema"
-	"peekabook/model/web"
+	"ecomplaint/model/domain"
+	"ecomplaint/model/schema"
+	"ecomplaint/model/web"
 )
 
 func UserCreateRequestToUserDomain(request web.UserCreateRequest) *domain.User {

@@ -2,11 +2,11 @@ package service
 
 import (
 	"fmt"
-	"peekabook/model/domain"
-	"peekabook/model/web"
-	"peekabook/repository"
-	"peekabook/utils/helper"
-	"peekabook/utils/req"
+	"ecomplaint/model/domain"
+	"ecomplaint/model/web"
+	"ecomplaint/repository"
+	"ecomplaint/utils/helper"
+	"ecomplaint/utils/req"
 
 	"github.com/go-playground/validator"
 	"github.com/labstack/echo/v4"

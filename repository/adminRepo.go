@@ -1,10 +1,10 @@
 package repository
 
 import (
-	"peekabook/model/domain"
-	"peekabook/model/schema"
-	"peekabook/utils/req"
-	"peekabook/utils/res"
+	"ecomplaint/model/domain"
+	"ecomplaint/model/schema"
+	"ecomplaint/utils/req"
+	"ecomplaint/utils/res"
 
 	"gorm.io/gorm"
 )

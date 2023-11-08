@@ -1,4 +1,4 @@
-module peekabook
+module ecomplaint
 
 go 1.21.0
 

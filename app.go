@@ -2,8 +2,8 @@ package main
 
 import (
 	"net/http"
-	"peekabook/config"
-	"peekabook/routes"
+	"ecomplaint/config"
+	"ecomplaint/routes"
 
 	"github.com/go-playground/validator"
 	"github.com/labstack/echo/v4"

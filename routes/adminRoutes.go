@@ -2,9 +2,9 @@ package routes
 
 import (
 	"os"
-	"peekabook/controller"
-	"peekabook/repository"
-	"peekabook/service"
+	"ecomplaint/controller"
+	"ecomplaint/repository"
+	"ecomplaint/service"
 
 	"github.com/go-playground/validator"
 	echojwt "github.com/labstack/echo-jwt/v4"

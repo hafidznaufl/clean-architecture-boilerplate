@@ -1,9 +1,9 @@
 package res
 
 import (
-	"peekabook/model/domain"
-	"peekabook/model/schema"
-	"peekabook/model/web"
+	"ecomplaint/model/domain"
+	"ecomplaint/model/schema"
+	"ecomplaint/model/web"
 )
 
 func AdminDomainToAdminLoginResponse(admin *domain.Admin) web.AdminLoginResponse {

@@ -2,10 +2,10 @@ package controller
 
 import (
 	"net/http"
-	"peekabook/model/web"
-	"peekabook/service"
-	"peekabook/utils/helper"
-	"peekabook/utils/res"
+	"ecomplaint/model/web"
+	"ecomplaint/service"
+	"ecomplaint/utils/helper"
+	"ecomplaint/utils/res"
 	"strconv"
 
 	"strings"

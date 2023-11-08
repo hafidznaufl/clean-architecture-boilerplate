@@ -3,7 +3,7 @@ package config
 import (
 	"fmt"
 	"os"
-	"peekabook/model/schema"
+	"ecomplaint/model/schema"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
