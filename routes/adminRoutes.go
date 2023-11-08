@@ -25,9 +25,9 @@ func AdminRoutes(e *echo.Echo, db *gorm.DB, validate *validator.Validate) {
 
 	adminsGroup.Use(echojwt.JWT([]byte(os.Getenv("JWT_SECRET"))))
 
-	adminsGroup.GET("/:id", adminController.GetAdminController)
+	adminsGroup.GET("search/:id", adminController.GetAdminController)
 	adminsGroup.GET("", adminController.GetAdminsController)
-	adminsGroup.GET("", adminController.GetAdminByNameController)
+	adminsGroup.GET("/search", adminController.GetAdminByNameController)
 	adminsGroup.PUT("/:id", adminController.UpdateAdminController)
 	adminsGroup.PUT("/reset-password", adminController.ResetPasswordController)
 	adminsGroup.DELETE("/:id", adminController.DeleteAdminController)
