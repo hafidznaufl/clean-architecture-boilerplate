@@ -65,7 +65,7 @@ func (repository *UserRepositoryImpl) FindByEmail(email string) (*domain.User, e
 func (repository *UserRepositoryImpl) FindAll() ([]domain.User, error) {
 	user := []domain.User{}
 
-	result := repository.DB.Find(&user)
+	result := repository.DB.Where("deleted_at IS NULL").Find(&user)
 	if result.Error != nil {
 		return nil, result.Error
 	}

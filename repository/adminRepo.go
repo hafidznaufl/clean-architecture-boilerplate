@@ -65,7 +65,7 @@ func (repository *AdminRepositoryImpl) FindByEmail(email string) (*domain.Admin,
 func (repository *AdminRepositoryImpl) FindAll() ([]domain.Admin, error) {
 	admin := []domain.Admin{}
 
-	result := repository.DB.Find(&admin)
+	result := repository.DB.Where("deleted_at IS NULL").Find(&admin)
 	if result.Error != nil {
 		return nil, result.Error
 	}
