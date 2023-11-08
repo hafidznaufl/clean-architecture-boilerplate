@@ -17,7 +17,7 @@ type UserController interface {
 	RegisterUserController(ctx echo.Context) error
 	LoginUserController(ctx echo.Context) error
 	UpdateUserController(ctx echo.Context) error
-	ResetPassword(ctx echo.Context) error
+	ResetPasswordController(ctx echo.Context) error
 	GetUserController(ctx echo.Context) error
 	GetUsersController(ctx echo.Context) error
 	GetUserByNameController(ctx echo.Context) error
@@ -122,7 +122,7 @@ func (c *UserControllerImpl) UpdateUserController(ctx echo.Context) error {
 	return ctx.JSON(http.StatusOK, helper.SuccessResponse("Successfully Updated User Data", response))
 }
 
-func (c *UserControllerImpl) ResetPassword(ctx echo.Context) error {
+func (c *UserControllerImpl) ResetPasswordController(ctx echo.Context) error {
 	resetPasswordRequest := web.UserResetPasswordRequest{}
 	err := ctx.Bind(&resetPasswordRequest)
 	if err != nil {
