@@ -17,7 +17,7 @@ type AdminController interface {
 	RegisterAdminController(ctx echo.Context) error
 	LoginAdminController(ctx echo.Context) error
 	UpdateAdminController(ctx echo.Context) error
-	ResetPassword(ctx echo.Context) error
+	ResetPasswordController(ctx echo.Context) error
 	GetAdminController(ctx echo.Context) error
 	GetAdminsController(ctx echo.Context) error
 	GetAdminByNameController(ctx echo.Context) error
@@ -175,7 +175,7 @@ func (c *AdminControllerImpl) UpdateAdminController(ctx echo.Context) error {
 	return ctx.JSON(http.StatusOK, helper.SuccessResponse("Successfully Updated Admin Data", response))
 }
 
-func (c *AdminControllerImpl) ResetPassword(ctx echo.Context) error {
+func (c *AdminControllerImpl) ResetPasswordController(ctx echo.Context) error {
 	resetPasswordRequest := web.AdminResetPasswordRequest{}
 	err := ctx.Bind(&resetPasswordRequest)
 	if err != nil {
